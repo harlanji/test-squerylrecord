@@ -41,7 +41,19 @@ class Boot {
 
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) :: Nil
-    LiftRules.setSiteMap(SiteMap(entries:_*))
+    def sitemap = SiteMap(entries:_*)
+    //LiftRules.setSiteMap(sitemap)
+
+    def sitemapMutators = test.model.User.sitemapMutator
+    LiftRules.setSiteMapFunc(() => sitemapMutators(sitemap))
+
+
+    // Force the request to be UTF-8
+    LiftRules.early.append(_.setCharacterEncoding("UTF-8"))
+
+    // What is the function to test if a user is logged in?
+    LiftRules.loggedInTest = Full(() => test.model.User.loggedIn_?)
+
     
     S.addAround(DB.buildLoanWrapper(DefaultConnectionIdentifier::Nil))
     S.addAround(new LoanWrapper {

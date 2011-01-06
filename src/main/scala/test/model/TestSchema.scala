@@ -6,6 +6,7 @@ object TestSchema extends Schema {
     val authors = table[Author]
     val books = table[Book]
     val publishers = table[Publisher]
+    val users = table[User]
 
   // this is a test schema, we can expose the power tools ! :
   override def drop = super.drop
