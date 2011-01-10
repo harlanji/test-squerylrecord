@@ -23,7 +23,21 @@ class User extends MegaProtoUser[User] /* with KeyedRecord[Long] */ {
     override def toString = "User"
 }
 
+
+
+
+
 object User extends User with MetaMegaProtoUser[User] {
+
+  override def typeToBridge(in: User): UserBridge = new MySquerylUserBridge(in)
+  
+  protected class MySquerylUserBridge(in: User) extends MyUserBridge(in) {
+    // Save the user to backing store
+    override def save(): Boolean = {
+      in.save(true)
+      true
+    }
+  }
 
 
   override def screenWrap = Full(<lift:surround with="default" at="content">
